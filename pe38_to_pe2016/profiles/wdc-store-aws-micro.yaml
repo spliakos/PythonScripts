@@ -1,0 +1,22 @@
+---
+common:
+  :stack_template: wdc-store-aws
+  #Do we need app tag?
+  #:app_tag: wdc01
+  :store:
+    role: role-wdc-store
+    count: 3
+    cpus: 4
+    memoryMB: 12228
+    disks:
+      - sizeGB: 60
+        format: thin
+        system: true
+      - sizeGB: 15
+        format: thin
+        system: false
+      - sizeGB: 5
+        format: thin
+        system: false
+    additional_facts:
+      - aws_instance_type: 'm4.large'

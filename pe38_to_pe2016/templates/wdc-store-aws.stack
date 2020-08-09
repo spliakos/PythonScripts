@@ -1,0 +1,46 @@
+# SB WDC
+---
+version: '5.0'
+puppetmaster: pe38
+created: <%= Time.now.to_i %>
+created_by: <%= @user %>
+datacentre: <%= @dc %>
+cell: <%= @cell %>
+stack: <%= @stack_tag %>
+
+buildLan: <%= @buildlan %>
+cluster: <%= @cluster %>
+domain: <%= @domain %>
+
+project_name: 'WDC Store'
+description: 'WDC Store'
+channel: 'Sportsbook'
+business: 'Both'
+
+role_start_order:
+  - role-wdc-store
+
+firewalls:
+  - repository: sportsbook
+    template_name: sportsbook.fwr.yaml
+
+machines: <% @store['count'].times do |i| %>
+  - name: <%= @cell %>x<%= @stack_tag %>wdc<%= sprintf "%03d", i+1 %>
+    role: role-wdc-store
+    os_config: ol7-template
+    networks:
+      - tier: <%= @ncde_sports_app01 %>
+    hardware:
+      cpus: <%= @store['cpus'] %>
+      memoryMB: <%= @store['memoryMB'] %>
+      disks:<% @store['disks'].each do |disk| %>
+        - sizeGB: <%= disk['sizeGB'] %>
+          format: <%= disk['format'] %>
+          system: <%= disk['system'] %><% end %>
+      anti_affinity_rule: <%=@cell%>_<%=@stack_tag%>_store
+    notes: Sportsbook WDC <%= @stack_tag %> Stack
+    additional_facts: <% @store['additional_facts'].each do |fact| %>
+        aws_instance_type: <%= fact['aws_instance_type']%><% end %>
+      #Do we need app tag?
+      #app_tag: <%=@app_tag%>
+<% end %>

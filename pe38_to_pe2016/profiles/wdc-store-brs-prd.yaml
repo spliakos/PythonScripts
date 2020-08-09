@@ -1,0 +1,21 @@
+---
+common:
+  :stack_template: wdc-store
+  :puppetmaster: pe2016
+  :os_config: ol7-template
+  :store:
+    role: role-wdc-store
+    count: 5
+    cpus: 2
+    memoryMB: 4096
+    disks:
+      - sizeGB: 40
+        format: thin
+        system: true
+      - sizeGB: 10
+        format: thin
+        system: false
+      - sizeGB: 5
+        format: thin
+        system: false
+
